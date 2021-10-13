@@ -1,6 +1,7 @@
 import math
 import numpy as np
 import pandas as pd
+from pandas.io.pytables import IndexCol
 def open_csv():
     youtube_df = pd.read_csv("youtube_analytics.csv", index_col="Date")
     #Reads csv to a pandas dataframe and assigns index column
@@ -21,7 +22,7 @@ def slice_data(youtube_df):
     new_yt_df = youtube_df[start:end]
     #Creates new data frame including the start and end dates inputed by user
     print(new_yt_df)
-    print("Enter one of the column names: Date, Views, Average percentage viewed (%), Unique viewers, Subscribers, Watch time (hours), Average view duration, Shares, Likes, Dislikes, Comments added, Impressions, Impressions click-through rate (%)")
+    print("Enter one of the column names: Views, Average percentage viewed (%), Unique viewers, Subscribers, Watch time (hours), Average view duration, Shares, Likes, Dislikes, Comments added, Impressions, Impressions click-through rate (%)")
     col = input()
     #Prompts user for column
 
@@ -33,14 +34,26 @@ def slice_data(youtube_df):
 
 
 def calculate_sum_stats(new_df):
-    print()
-    print("Sum:", new_df.sum())
-    print("Mean:", new_df.mean())
-    print("Standard Deviation:", new_df.std())
-    print("Median:", new_df.median())
-    print("Maximum:", new_df.max())
-    print("Minimum:", new_df.min())
-    #Calculates and prints summary stats
+    
+    sum = new_df.sum()
+    mean = new_df.mean()
+    stan_dev = new_df.std()
+    med = new_df.median()
+    max = new_df.max()
+    min = new_df.min()
+    #Calculates and assigns summary stats to variable
+    
+    descriptions = ["Sum", "Mean", "Standard Deviation", "Median", "Maximum", "Minimum"]
+    sum_stats = [sum, mean, stan_dev, med, max, min]
+    #Creates index and data values for pd series
+
+    
+    sum_stats_ser = pd.Series(sum_stats, index=descriptions)
+    #creates pd series with summary stats
+    
+    sum_stats_ser.to_csv("summary_stats.csv")
+    #Writes summary stats out to csv file
+
 
 
 def merge_tables(youtube_df, days_df):
